@@ -46,3 +46,8 @@ jobs:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.ViggoDevOpsInl3App_5AEC }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+    - name: Invoke Azure Function - Smoke Test
+      run: |
+        $url = "https://va-functionsmoketest.azurewebsites.net/api/smoketest" # Your function URL
+        $key = "${{ secrets.VA_FunctionSmokeTest_759B }}" # Your function key stored in secrets
+        Invoke-RestMethod -Uri $url -Headers @{ "x-functions-key"=$key } -Method GET
