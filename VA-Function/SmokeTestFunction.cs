@@ -7,29 +7,38 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Net.Http;
+using System.Net;
 
 namespace VA_Function
 {
     public static class SmokeTestFunction
     {
+        private static readonly HttpClient httpClient = new HttpClient();
+
         [FunctionName("SmokeTest")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            string url = req.Query["viggodevopsinl3app.azurewebsites.net"];
 
-            string name = req.Query["name"];
+            if (string.IsNullOrEmpty(url))
+            {
+                return new BadRequestObjectResult("Please pass a URL on the query string");
+            }
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
-
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            return new OkObjectResult(responseMessage);
+            try
+            {
+                HttpResponseMessage response = await httpClient.GetAsync(url);
+                return new OkObjectResult($"Status Code for {url}: {response.StatusCode}");
+            }
+            catch (HttpRequestException e)
+            {
+                log.LogError($"Error fetching website: {e.Message}");
+                // Return an appropriate error result
+                return new StatusCodeResult(StatusCodes.Status503ServiceUnavailable);
+            }
         }
     }
 }
