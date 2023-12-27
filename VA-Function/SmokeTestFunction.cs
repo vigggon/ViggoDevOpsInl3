@@ -10,9 +10,9 @@ using Newtonsoft.Json;
 
 namespace VA_Function
 {
-    public static class Function1
+    public static class SmokeTestFunction
     {
-        [FunctionName("Function1")]
+        [FunctionName("SmokeTest")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
