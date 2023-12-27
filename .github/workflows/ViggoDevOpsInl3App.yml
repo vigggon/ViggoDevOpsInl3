@@ -48,6 +48,6 @@ jobs:
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
     - name: Invoke Azure Function - Smoke Test
       run: |
-        $url = $'https://va-functionsmoketest.azurewebsites.net/api/smoketest' # Your function URL
+        $url = "https://va-functionsmoketest.azurewebsites.net/api/smoketest" # Your function URL
         $key = "${{ secrets.VA_FunctionSmokeTest_759B }}" # Your function key stored in secrets
         Invoke-RestMethod -Uri $url -Headers @{ "x-functions-key"=$key } -Method GET
