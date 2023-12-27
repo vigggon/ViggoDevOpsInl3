@@ -21,7 +21,7 @@ namespace VA_Function
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            string url = req.Query["viggodevopsinl3app.azurewebsites.net"];
+            string url = "https://viggodevopsinl3app.azurewebsites.net";
 
             if (string.IsNullOrEmpty(url))
             {
